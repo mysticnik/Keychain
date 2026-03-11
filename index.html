@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>Gallery</title>
+    <style>
+        body { 
+            margin: 0; background: #000; height: 100vh; 
+            display: flex; flex-direction: column; align-items: center; 
+            justify-content: center; overflow: hidden; color: white; 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
+        }
+        #canvas { 
+            display: none; width: 100%; height: 100%; object-fit: contain; 
+            opacity: 0; transition: opacity 0.5s ease-in; 
+        }
+        #input-box { 
+            display: none; background: rgba(30, 30, 30, 0.95); 
+            padding: 30px; border-radius: 20px; text-align: center; 
+            border: 1px solid #444; position: absolute; z-index: 10;
+        }
+        input { 
+            font-size: 2.5rem; width: 180px; text-align: center; 
+            background: #111; color: #fff; border: 1px solid #555; 
+            padding: 10px; border-radius: 8px; outline: none;
+        }
+        button { 
+            margin-top: 20px; padding: 12px 30px; font-size: 1.2rem; 
+            border-radius: 8px; cursor: pointer; background: #007AFF; 
+            color: white; border: none; font-weight: bold;
+        }
+        /* Invisible Trigger */
+        #trigger { position: fixed; top: 0; left: 0; width: 100px; height: 100px; z-index: 5; }
+    </style>
+</head>
+<body>
+
+    <div id="input-box">
+        <input type="number" id="roomNum" placeholder="###">
+        <br>
+        <button onclick="drawPrediction()">Generate</button>
+    </div>
+
+    <canvas id="canvas"></canvas>
+
+    <div id="trigger" onclick="tapHandler()"></div>
+
+    <script>
+        let tapCount = 0;
+        function tapHandler() {
+            tapCount++;
+            if (tapCount === 3) { 
+                document.getElementById('input-box').style.display = 'block'; 
+                tapCount = 0; 
+            }
+        }
+
+        function drawPrediction() {
+            const num = document.getElementById('roomNum').value;
+            const canvas = document.getElementById('canvas');
+            const ctx = canvas.getContext('2d');
+            const img = new Image();
+
+            img.src = 'keychain.jpg'; 
+            img.onload = function() {
+                canvas.width = img.width;
+                canvas.height = img.height;
+                ctx.drawImage(img, 0, 0);
+                
+                // Professional Engraving/Stamped Effect
+                // Adjust '150px' to resize the text
+                ctx.font = "bold 150px 'Courier New', monospace";
+                ctx.textAlign = "center";
+                ctx.textBaseline = "middle";
+                
+                // Depth/Shadow effect
+                ctx.shadowColor = "rgba(0, 0, 0, 0.4)";
+                ctx.shadowBlur = 4;
+                ctx.shadowOffsetX = 2;
+                ctx.shadowOffsetY = 2;
+                
+                // Ink color
+                ctx.fillStyle = "rgba(40, 30, 20, 0.9)"; 
+                ctx.fillText(num, canvas.width / 2, canvas.height / 2);
+
+                // Reveal with Fade
+                document.getElementById('input-box').style.display = 'none';
+                canvas.style.display = 'block';
+                setTimeout(() => { canvas.style.opacity = '1'; }, 50);
+            };
+        }
+    </script>
+</body>
+</html>
